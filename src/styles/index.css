@@ -1,4 +1,22 @@
+.counter-display {
+    text-align: center;
+    margin: 50px 0px;
 
+}
+
+.counter-display div {
+    display: inline-block;
+    font-size: 100px;
+    background-color: black;
+    color: white;
+    width: 100px;
+   
+}
+
+.bi-clock {
+    width: 60px ;
+    Height: 60px;
+}
 /* 
 
     You can write your own styles here...
