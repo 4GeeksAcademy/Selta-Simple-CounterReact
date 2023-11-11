@@ -10,7 +10,13 @@ import rigoImage from "../../img/rigo-baby.jpg";
 const Home = () => {
 
 	const [counter, setCounter] = useState (0);
-	const [isActive,setIsActive] = useState(false)
+	const [countDown, setCountDown] = useState (60);
+	const [isActive,setIsActive] = useState(false);
+	
+
+	const handler = value => setIsActive (value)
+
+
 	
 	let timer;
 	
@@ -20,26 +26,44 @@ const Home = () => {
 	};
   
 	const handleStop = () => {
-		clearTimeout(timer);
+		setIsActive (false);
 	};
 	const handlereset = () => {
 	  setCounter(0);
 	  clearTimeout(timer);
 	};
-	useEffect(() => {
-		if (counter) {
-		  timer = setTimeout(handleStart, 1000);
-		}
-	  }, [counter]);
-	  
-	  const handleDown = () => {
-		setIsCountingUp(false);
-		setCounter(targetTime);
+	const handleDown = () => {
+		setIsActive(false);
+		
+		setCounter(setCountDown (countDown -1), 1000); 
+		return () => clearInterval (timer);
 	  };
+	
+	useEffect(() => {
+		let intervalId;
+	
+		if (isActive) {
+		  intervalId = setInterval(() => {
+			setCounter((prevCounter) => prevCounter + 1);
+		  }, 1000);
+		} else {
+		  clearInterval(intervalId);
+		}
+	
+		if (counter === countDown) {
+		  window.alert("Target time reached!");
+		}
+	
+		return () => {
+		  clearInterval(intervalId);
+		};
+	  }, [isActive , counter, countDown]);
+	  
+	  
 	
 
 
-	  //check folder 4geeks 
+	  
 
 	function calculateSeconds (secondCounter, placeValue) {
 		return Math.floor(secondCounter / placeValue) % 10
@@ -61,10 +85,10 @@ const Home = () => {
 		sixDigit = {calculateSeconds(counter, 1)} />
 		 <div className="text-center mt-1">
           <div className="btn-group" role="group">
-            <button className="btn btn-primary" onClick={handleStart} >
+            <button className="btn btn-primary" onClick={handleStart} disabled={isActive }>
              Start
             </button>
-            <button className="btn btn-secondary" onClick={handleStop} >
+            <button className="btn btn-secondary" onClick={handleStop} disabled={!isActive } >
               Stop
             </button>
             <button className="btn btn-danger" onClick={handlereset} >
